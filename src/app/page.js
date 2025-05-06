@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Home() {
   const [city, setCity] = useState('');
@@ -25,6 +26,16 @@ export default function Home() {
     } catch(err) {
       setError('エラーが発生しました');
     }
+  };
+
+  //Animation settings
+  const variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (custom) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: custom * 0.3 }
+    }),
   };
 
   return (
@@ -53,13 +64,40 @@ export default function Home() {
           <p className="text-red-500 text-center mt-4">{error}</p>
         )}
 
+      <AnimatePresence>
         {weather && weather.weather && weather.weather[0] && (
-          <div className="mt-6 bg-white bg-opacity-90 rounded-xl shadow-lg p-6 text-center">
-            <p className="text-2xl font-semibold mb-2">{weather.name}</p>
-            <p className="text-xl text-gray-700 capitalize">{weather.weather[0].description}</p>
-            <p className="text-xl mt-2">気温:{weather.main.temp}℃</p>
-          </div>
+          <motion.div
+          className="mt-6 bg-white bg-opacity-90 rounded-xl shadow-lg p-6 text-center overflow-hidden"
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          >
+            <motion.p
+            className="text-2xl font-semibold mb-2"
+            variants={variants}
+            custom={0}
+            >
+              ⛅{weather.name}
+            </motion.p>
+
+            <motion.p
+            className="text-xl text-gray-700 capitalize"
+            variants={variants}
+            custom={1}
+            >
+              {weather.weather[0].description}
+            </motion.p>
+
+            <motion.p
+            className="text-xl mt-2"
+            variants={variants}
+            custom={2}
+            >
+              🌡気温: {weather.main.temp}℃
+            </motion.p>
+          </motion.div>
         )}
+      </AnimatePresence>
       </div>
     </div>
 
