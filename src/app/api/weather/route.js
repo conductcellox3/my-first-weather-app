@@ -2,7 +2,8 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const city = searchParams.get('city');
 
-    const apiKey = 'df018257af67ef2084ae4265485d5208';
+    const apiKey = process.env.OPENWEATHER_API_KEY;
+    
     const res = await fetch(
          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ja`
     );
